@@ -95,3 +95,4 @@ C:\Users\ArthurANTOINE\Documents\Programs\Other\CS_training\HelpDesk\obj\Debug\n
 C:\Users\ArthurANTOINE\Documents\Programs\Other\CS_training\HelpDesk\obj\Debug\net10.0\HelpDesk.genruntimeconfig.cache
 C:\Users\ArthurANTOINE\Documents\Programs\Other\CS_training\HelpDesk\obj\Debug\net10.0\ref\HelpDesk.dll
 C:\Users\ArthurANTOINE\Documents\Programs\Other\CS_training\HelpDesk\obj\Debug\net10.0\compressed\a0yjyrfx3j-{0}-cwzokeepne-cwzokeepne.gz
+C:\Users\ArthurANTOINE\Documents\Programs\Other\CS_training\HelpDesk\obj\Debug\net10.0\HelpDesk.sourcelink.json

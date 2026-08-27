@@ -1,7 +1,8 @@
 @page "/ticket/{id:int}"
-@model ViewTicketModel
+@model HelpDesk.Pages.ViewTicketModel
+
 @{
-    ViewData[index: "Title"] = "View Ticket";
+    ViewData["Title"] = "View Ticket";
 }
 
 <h1>@ViewData[index: "Title"]</h1>
@@ -14,14 +15,33 @@ else
 {
     <div>
         <h2>@Model.Ticket.title</h2>
+
         <p>@Model.Ticket.message</p>
         <p>User ID: @Model.Ticket.user_id</p>
         <p>Status: @(Model.Ticket.open ? "Open" : "Closed")</p>
+
+        <h3>New message</h3>
+
+        <form method="post" asp-page-handler="SendMessage">
+            <input type="hidden" name="ticket_id" value="@Model.Ticket.id" />
+
+            <label asp-for="Message"></label>
+            <input asp-for="Message" class="input-field" />
+
+            <span asp-validation-for="Message"></span>
+
+            <button type="submit">Send</button>
+        </form>
+
         <h3>Exchange</h3>
+
         <ul>
-            @foreach (string line in Model.Ticket.exchange)
+            @foreach ((int id, string message) in Model.Ticket.exchange)
             {
-                <li>@line</li>
+                <li>
+                    <strong>User @id:</strong>
+                    @message
+                </li>
             }
         </ul>
     </div>

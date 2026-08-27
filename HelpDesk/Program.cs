@@ -30,10 +30,12 @@ app.MapRazorPages()
 
 ListData.Tickets = new List<Ticket>
 {
+    new Ticket(0,"Ticket unavailable","Error getting the ticket"),
     new Ticket(1,"Can't log in","Password reset not working."),
     new Ticket(2,"Feature request","Dark mode please."),
     new Ticket(3,"Billing question","Why is it so expensive?"),
 };
+
 
 app.Run();
 

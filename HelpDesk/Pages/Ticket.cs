@@ -6,13 +6,18 @@ public class Ticket
     public string message;
     public int user_id;
     public bool open = true;
-    public List<string> exchange = [];
+    public List<(int, string)> exchange = [];
     public Ticket(int user_id = 0, string title = "", string message = "")
     {
         this.title = title;
         this.message = message;
         this.user_id = user_id;
     }
+    public void AddMessage(int id, string message)
+    {
+        this.exchange.Add((id,message));
+    }
+
 }
 
 

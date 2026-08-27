@@ -1,20 +1,21 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData[index: "Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <ul>
-        @foreach (var ticket in Model.Tickets){
+        @foreach (Ticket ticket in Model.Tickets)
+        {
             <li>
-                <h2>@ticket.title</h2>
+                <h2>
+                    <a asp-page="/ViewTicket"asp-route-id="@ticket.id">
+                        @ticket.title
+                    </a>
+                </h2>
                 <p>@ticket.message</p>
-
             </li>
         }
     </ul>
 </div>
-
