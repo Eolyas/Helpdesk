@@ -1,0 +1,24 @@
+@page
+@model CreateTicketModel
+
+<h1>@ViewData["Title"]</h1>
+
+
+<form asp-controller="Tickets" asp-action="Submit" method="post">
+    <div>
+        <label>Title</label>
+        <input asp-for="title" />
+    </div>
+    <div>
+        <label>Message</label>
+        <input asp-for="message" />
+    </div>
+    <div>
+        <label>Your ID</label>
+        <input asp-for="user_id" />
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+
+

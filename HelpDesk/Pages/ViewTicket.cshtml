@@ -1,0 +1,28 @@
+@page "/ticket/{id:int}"
+@model ViewTicketModel
+@{
+    ViewData[index: "Title"] = "View Ticket";
+}
+
+<h1>@ViewData[index: "Title"]</h1>
+
+@if (Model.Ticket == null)
+{
+    <p>Ticket not found.</p>
+}
+else
+{
+    <div>
+        <h2>@Model.Ticket.title</h2>
+        <p>@Model.Ticket.message</p>
+        <p>User ID: @Model.Ticket.user_id</p>
+        <p>Status: @(Model.Ticket.open ? "Open" : "Closed")</p>
+        <h3>Exchange</h3>
+        <ul>
+            @foreach (string line in Model.Ticket.exchange)
+            {
+                <li>@line</li>
+            }
+        </ul>
+    </div>
+}
