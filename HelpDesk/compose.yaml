@@ -1,0 +1,78 @@
+services:
+  database:
+    image: postgres:17
+    container_name: helpdesk-database
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+
+    container_name: helpdesk-website
+
+    working_dir: /src
+
+    command:
+      - dotnet
+      - watch
+      - --non-interactive
+      - run
+      - --no-launch-profile
+      - --urls=http://+:8080
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+
+      ConnectionStrings__HelpdeskDatabase: >-
+        Host=database;
+        Port=5432;
+        Database=${POSTGRES_DATABASE};
+        Username=${POSTGRES_USER};
+        Password=${POSTGRES_PASSWORD}
+
+    volumes:
+      - .:/src
+      - website_bin:/src/bin
+      - website_obj:/src/obj
+      - nuget_packages:/root/.nuget/packages
+
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
+  website_bin:
+  website_obj:
+  nuget_packages:

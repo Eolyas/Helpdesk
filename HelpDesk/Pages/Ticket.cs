@@ -1,21 +1,31 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace HelpDesk.Models;
+
 public class Ticket
 {
-    private static int global_id = 0;
-    public int id = global_id++;
-    public string title;
-    public string message;
-    public int user_id;
-    public bool open = true;
-    public List<(int, string)> exchange = [];
-    public Ticket(int user_id = 0, string title = "", string message = "")
+    public int Id {get;set;}
+    [Required]
+    public string Title {get;set;}
+    [Required]
+    public string Message {get;set;}
+    public int UserId {get;set;}
+    public List<int> UserList {get;set;}
+    public bool Open {get;set;} = true;
+    public DateTime CreationDate {get;set;}
+    public DateTime ClosedDate {get;set;}
+    public List<Message> Exchange {get;set;} = [];
+    public Ticket(int UserId = 0, string Title = "", string Message = "")
     {
-        this.title = title;
-        this.message = message;
-        this.user_id = user_id;
+        this.Title = Title;
+        this.Message = Message;
+        this.UserId = UserId;
+        this.CreationDate = DateTime.Now;
     }
-    public void AddMessage(int id, string message)
+    public void AddMessage(int UserId, string Text)
     {
-        this.exchange.Add((id,message));
+        Message Message = new Message(UserId,Text);
+        this.Exchange.Add(Message);
     }
 
 }

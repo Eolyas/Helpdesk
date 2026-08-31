@@ -2,28 +2,36 @@
 @model HelpDesk.Pages.ViewTicketModel
 
 @{
-    ViewData["Title"] = "View Ticket";
+    ViewData[index: "Title"] = "View Ticket";
 }
 
 <h1>@ViewData[index: "Title"]</h1>
 
-@if (Model.Ticket == null)
+@if (Models.Ticket == null)
 {
     <p>Ticket not found.</p>
 }
 else
 {
-    <div>
-        <h2>@Model.Ticket.title</h2>
-
-        <p>@Model.Ticket.message</p>
-        <p>User ID: @Model.Ticket.user_id</p>
-        <p>Status: @(Model.Ticket.open ? "Open" : "Closed")</p>
+    <div class="message-card">
+        <div class="message-header">
+            <h2 class="message-title">
+                @Model.Ticket.Title
+            </h2>
+            <p class="author-id">
+                User ID: @Model.Ticket.UserId
+            </p>
+        </div>
+        <p class="message-content">
+            @Model.Ticket.Message
+        </p>
+        
+        <p>Status: @(Model.Ticket.Open ? "Open" : "Closed")</p>
 
         <h3>New message</h3>
 
         <form method="post" asp-page-handler="SendMessage">
-            <input type="hidden" name="ticket_id" value="@Model.Ticket.id" />
+            <input type="hidden" name="ticket_id" value="@Model.Ticket.Id" />
 
             <label asp-for="Message"></label>
             <input asp-for="Message" class="input-field" />
@@ -36,11 +44,11 @@ else
         <h3>Exchange</h3>
 
         <ul>
-            @foreach ((int id, string message) in Model.Ticket.exchange)
+            @foreach (Message Message in Model.Ticket.Exchange)
             {
                 <li>
-                    <strong>User @id:</strong>
-                    @message
+                    <strong>User @Message.UserId:</strong>
+                    @Message.Text
                 </li>
             }
         </ul>

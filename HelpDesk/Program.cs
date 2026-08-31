@@ -1,8 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+var connectionString =
+    builder.Configuration.GetConnectionString("HelpdeskDatabase")
+    ?? throw new InvalidOperationException(
+        "Database connection string is missing.");
 
 var app = builder.Build();
 
@@ -15,6 +22,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseRouting();
 
@@ -38,4 +47,3 @@ ListData.Tickets = new List<Ticket>
 
 
 app.Run();
-

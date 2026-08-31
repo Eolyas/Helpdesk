@@ -29,3 +29,40 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.message-card {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.message-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.author-id {
+    justify-self: end;
+    margin-right: 15px;
+
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.message-title {
+    margin: 0;
+    text-align: center;
+}
+
+.message-content {
+    margin: 0;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}

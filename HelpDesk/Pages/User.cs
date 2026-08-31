@@ -1,14 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+namespace HelpDesk.Models;
 public class User
 {
-    private static int global_id = 0;
-    public int id = global_id++;
-    public string firstname;
-    public string lastname;
-    public string email;
-    public User(string firstname, string lastname, string email)
+    public int Id {get;set;}
+    [Required]
+    public string FirstName {get;set;}
+    [Required]
+    public string LastName {get;set;}
+    [Required]
+    [EmailAddress]
+    public string Email {get;set;}
+    public User(string FirstName, string LastName, string Email)
     {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+        this.Email = Email;
     }
 }

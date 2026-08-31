@@ -8,14 +8,16 @@
     <ul>
         @foreach (Ticket ticket in Model.Tickets)
         {
-            <li>
-                <h2>
-                    <a asp-page="/ViewTicket"asp-route-id="@ticket.id">
-                        @ticket.title
-                    </a>
-                </h2>
-                <p>@ticket.message</p>
-            </li>
+            if (ticket.Id !=0){
+                <li>
+                    <h2>
+                        <a asp-page="/ViewTicket"asp-route-id="@ticket.Id">
+                            @ticket.Title
+                        </a>
+                    </h2>
+                    <p>@ticket.Message</p>
+                </li>
+            }
         }
     </ul>
 </div>

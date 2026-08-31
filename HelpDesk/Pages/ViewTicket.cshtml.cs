@@ -9,15 +9,15 @@ public class ViewTicketModel : PageModel
     [BindProperty]
     public string Message {get;set;} = "";
 
-    public IActionResult OnGet(int id)
+    public IActionResult OnGet(int Id)
     {
-        Ticket = ListData.Tickets.FirstOrDefault(t => t.id == id,ListData.Tickets[0]);
+        Ticket = ListData.Tickets.FirstOrDefault(t => t.Id == Id,ListData.Tickets[0]);
         return Page();
     }
-    public IActionResult OnPostSendMessage(int ticket_id)
+    public IActionResult OnPostSendMessage(int TicketId)
     {
-        Ticket = ListData.Tickets.FirstOrDefault(t => t.id == ticket_id,ListData.Tickets[0]);
+        Ticket = ListData.Tickets.FirstOrDefault(t => t.Id == TicketId,ListData.Tickets[0]);
         Ticket?.AddMessage(1,Message);
-        return LocalRedirect($"/ticket/{ticket_id}");
+        return LocalRedirect($"/ticket/{TicketId}");
     }
 }
