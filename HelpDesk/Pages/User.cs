@@ -10,6 +10,8 @@ public class User
     [Required]
     [EmailAddress]
     public string Email {get;set;}
+    public List<Message> Messages {get;set;}
+    public List<Ticket> Tickets {get;set;}
     public User(string FirstName, string LastName, string Email)
     {
         this.FirstName = FirstName;

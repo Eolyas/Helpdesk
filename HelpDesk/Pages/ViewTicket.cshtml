@@ -1,13 +1,13 @@
 @page "/ticket/{id:int}"
 @model HelpDesk.Pages.ViewTicketModel
-
+@using HelpDesk.Models
 @{
     ViewData[index: "Title"] = "View Ticket";
 }
 
 <h1>@ViewData[index: "Title"]</h1>
 
-@if (Models.Ticket == null)
+@if (Model.Ticket == null)
 {
     <p>Ticket not found.</p>
 }
@@ -19,7 +19,7 @@ else
                 @Model.Ticket.Title
             </h2>
             <p class="author-id">
-                User ID: @Model.Ticket.UserId
+                User ID: @Model.Ticket.User.Id
             </p>
         </div>
         <p class="message-content">
@@ -33,10 +33,10 @@ else
         <form method="post" asp-page-handler="SendMessage">
             <input type="hidden" name="ticket_id" value="@Model.Ticket.Id" />
 
-            <label asp-for="Message"></label>
-            <input asp-for="Message" class="input-field" />
+            <label asp-for="Text"></label>
+            <input asp-for="Text" class="input-field" />
 
-            <span asp-validation-for="Message"></span>
+            <span asp-validation-for="Text"></span>
 
             <button type="submit">Send</button>
         </form>
@@ -47,7 +47,7 @@ else
             @foreach (Message Message in Model.Ticket.Exchange)
             {
                 <li>
-                    <strong>User @Message.UserId:</strong>
+                    <strong>User @Message.User.Id:</strong>
                     @Message.Text
                 </li>
             }

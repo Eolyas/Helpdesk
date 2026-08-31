@@ -9,22 +9,22 @@ public class Ticket
     public string Title {get;set;}
     [Required]
     public string Message {get;set;}
-    public int UserId {get;set;}
+    public User User {get;set;}
     public List<int> UserList {get;set;}
     public bool Open {get;set;} = true;
     public DateTime CreationDate {get;set;}
     public DateTime ClosedDate {get;set;}
     public List<Message> Exchange {get;set;} = [];
-    public Ticket(int UserId = 0, string Title = "", string Message = "")
+    public Ticket(User User, string Title = "", string Message = "")
     {
         this.Title = Title;
         this.Message = Message;
-        this.UserId = UserId;
+        this.User = User;
         this.CreationDate = DateTime.Now;
     }
-    public void AddMessage(int UserId, string Text)
+    public void AddMessage(User User, string Text)
     {
-        Message Message = new Message(UserId,Text);
+        Message Message = new Message(User,Text);
         this.Exchange.Add(Message);
     }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using HelpDesk.Models;
 
 namespace HelpDesk.Controllers;
 
@@ -6,9 +7,9 @@ public class TicketsController : Controller
 {
     // POST /Tickets/Submit
     [HttpPost]
-    public IActionResult Submit(string title, string message, int user_id)
+    public IActionResult Submit(string Title, string Text, User User)
     {
-        ListData.Tickets.Add(new Ticket(user_id, title, message));
+        ListData.Tickets.Add(new Ticket(User, Title, Text));
         return Redirect("/");
     }
 }
