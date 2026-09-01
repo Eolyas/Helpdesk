@@ -1,5 +1,5 @@
 @page "/ticket/{id:int}"
-@model HelpDesk.Pages.ViewTicketModel
+@model ViewTicketModel
 @using HelpDesk.Models
 @{
     ViewData[index: "Title"] = "View Ticket";
@@ -31,7 +31,7 @@ else
         <h3>New message</h3>
 
         <form method="post" asp-page-handler="SendMessage">
-            <input type="hidden" name="ticket_id" value="@Model.Ticket.Id" />
+            <input type="hidden" name="ticket_id" value="@Model.Ticket.TicketId" />
 
             <label asp-for="Text"></label>
             <input asp-for="Text" class="input-field" />

@@ -1,24 +1,25 @@
 ﻿@page
 @model IndexModel
-@using HelpDesk.Models
-@{
-    ViewData[index: "Title"] = "Home page";
-}
 
-<div class="text-center">
+<h1>Tickets</h1>
+
+@if (Model.Tickets.Count == 0)
+{
+    <p>No tickets found.</p>
+}
+else
+{
     <ul>
-        @foreach (Ticket Ticket in ListData.Tickets)
+        @foreach (Models.Ticket ticket in Model.Tickets)
         {
-            if (Ticket.Id !=0){
-                <li>
-                    <h2>
-                        <a asp-page="/ViewTicket"asp-route-id="@Ticket.Id">
-                            @Ticket.Title
-                        </a>
-                    </h2>
-                    <p>@Ticket.Text</p>
-                </li>
-            }
+            <li>
+                <a asp-page="/ViewTicket"
+                   asp-route-id="@ticket.TicketId">
+                    @ticket.Title
+                </a>
+
+                <p>@ticket.Text</p>
+            </li>
         }
     </ul>
-</div>
+}

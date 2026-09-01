@@ -5,16 +5,15 @@ namespace HelpDesk.Models;
 
 public class Message
 {
+    public int MessageId {get;set;}
     public DateTime CreatedAt {get;set;} = DateTime.Now;
-    [Required]
-    public int UserId {get;set;}
-    [Required]
-    public User User {get;set;}
     [Required]
     public string Text {get;set;} = string.Empty;
     public int TicketId {get;set;}
+    public Ticket Ticket {get;set;} = null!;
     [Required]
-    public Ticket Ticket {get;set;}
+    public int UserId {get;set;}
+    public User User {get;set;} = null!;
     public Message(int UserId, int TicketId, string Text)
     {
         this.UserId = UserId;

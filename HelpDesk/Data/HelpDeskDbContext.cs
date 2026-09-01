@@ -26,19 +26,19 @@ public class HelpDeskDbContext : DbContext
         modelBuilder.Entity<Ticket>()
             .HasOne(ticket => ticket.User)
             .WithMany(user => user.Tickets)
-            .HasForeignKey(ticket => ticket.User)
+            .HasForeignKey(ticket => ticket.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Message>()
             .HasOne(message => message.Ticket)
             .WithMany(ticket => ticket.Exchange)
-            .HasForeignKey(message => message.Ticket)
+            .HasForeignKey(message => message.TicketId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Message>()
             .HasOne(message => message.User)
-            .WithMany()
-            .HasForeignKey(message => message.User)
+            .WithMany(user => user.Messages)
+            .HasForeignKey(message => message.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ticket>()

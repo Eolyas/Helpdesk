@@ -6,7 +6,7 @@ namespace HelpDesk.Models;
 
 public class Ticket
 {
-    public int Id {get;set;}
+    public int TicketId {get;set;}
     [Required]
     public string Title {get;set;}
     [Required]
@@ -29,7 +29,7 @@ public class Ticket
     }
     public void AddMessage(int UserId, string Text)
     {
-        Message Message = new Message(UserId, Id, Text);
+        Message Message = new Message(UserId, TicketId, Text);
         this.Exchange.Add(Message);
     }
 

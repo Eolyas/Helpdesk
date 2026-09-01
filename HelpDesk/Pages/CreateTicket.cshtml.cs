@@ -25,7 +25,7 @@ public class CreateTicketModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        var userExists = await database.Users.AnyAsync(user => user.Id == UserId);
+        var userExists = await database.Users.AnyAsync(user => user.UserId == UserId);
         if (!userExists)
         {
             ModelState.AddModelError(nameof(UserId),"The selected user does not exist.");
@@ -35,6 +35,6 @@ public class CreateTicketModel : PageModel
         database.Tickets.Add(Ticket);
         await database.SaveChangesAsync();
 
-        return LocalRedirect($"/ticket/{Ticket.Id}");
+        return RedirectToPage("/ViewTicket",new {id = Ticket.TicketId});
     }
 }
