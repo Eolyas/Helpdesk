@@ -19,11 +19,11 @@ else
                 @Model.Ticket.Title
             </h2>
             <p class="author-id">
-                User ID: @Model.Ticket.User.Id
+                User ID: @Model.Ticket.UserId
             </p>
         </div>
         <p class="message-content">
-            @Model.Ticket.Message
+            @Model.Ticket.Text
         </p>
         
         <p>Status: @(Model.Ticket.Open ? "Open" : "Closed")</p>
@@ -47,7 +47,7 @@ else
             @foreach (Message Message in Model.Ticket.Exchange)
             {
                 <li>
-                    <strong>User @Message.User.Id:</strong>
+                    <strong>User @Message.UserId:</strong>
                     @Message.Text
                 </li>
             }

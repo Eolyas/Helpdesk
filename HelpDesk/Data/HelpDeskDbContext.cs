@@ -15,8 +15,7 @@ public class HelpDeskDbContext : DbContext
 
     public DbSet<Ticket> Tickets => Set<Ticket>();
 
-    public DbSet<Message> TicketMessages =>
-        Set<Message>();
+    public DbSet<Message> TicketMessages => Set<Message>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,12 +42,12 @@ public class HelpDeskDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ticket>()
-            .HasIndex(ticket => ticket.User);
+            .HasIndex(ticket => ticket.UserId);
 
         modelBuilder.Entity<Ticket>()
             .HasIndex(ticket => ticket.Open);
 
         modelBuilder.Entity<Message>()
-            .HasIndex(message => message.Ticket);
+            .HasIndex(message => message.TicketId);
     }
 }

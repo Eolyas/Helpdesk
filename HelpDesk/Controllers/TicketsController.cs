@@ -7,9 +7,9 @@ public class TicketsController : Controller
 {
     // POST /Tickets/Submit
     [HttpPost]
-    public IActionResult Submit(string Title, string Text, User User)
+    public IActionResult Submit(string Title, string Text, int UserId)
     {
-        ListData.Tickets.Add(new Ticket(User, Title, Text));
+        ListData.Tickets.Add(new Ticket(UserId, Title, Text));
         return Redirect("/");
     }
 }

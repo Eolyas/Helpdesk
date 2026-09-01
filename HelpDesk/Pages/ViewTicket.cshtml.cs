@@ -15,10 +15,10 @@ public class ViewTicketModel : PageModel
         Ticket = ListData.Tickets.FirstOrDefault(t => t.Id == Id,ListData.Tickets[0]);
         return Page();
     }
-    public IActionResult OnPostSendMessage(Ticket Ticket, User User)
+    public IActionResult OnPostSendMessage(Ticket Ticket, int UserId)
     {
         Ticket = ListData.Tickets.FirstOrDefault(t => t.Id == Ticket.Id,ListData.Tickets[0]);
-        Ticket?.AddMessage(User,Text);
+        Ticket?.AddMessage(UserId,Text);
         return LocalRedirect($"/ticket/{Ticket.Id}");
     }
 }
