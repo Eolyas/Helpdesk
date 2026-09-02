@@ -25,7 +25,7 @@ public class CreateTicketModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        var userExists = await database.Users.AnyAsync(user => user.UserId == UserId);
+        bool userExists = await database.Users.AnyAsync(user => user.UserId == UserId);
         if (!userExists)
         {
             ModelState.AddModelError(nameof(UserId),"The selected user does not exist.");
@@ -33,7 +33,8 @@ public class CreateTicketModel : PageModel
         }
         var Ticket = new Ticket(UserId, Title, Text);
         database.Tickets.Add(Ticket);
-        await database.SaveChangesAsync();
+        int SavedRows = await database.SaveChangesAsync();
+        Console.WriteLine($"Saved rows: {SavedRows}, Ticket ID: {Ticket.TicketId}");
 
         return RedirectToPage("/ViewTicket",new {id = Ticket.TicketId});
     }

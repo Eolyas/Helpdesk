@@ -19,17 +19,20 @@ public class Ticket
     public DateTime CreationDate {get;set;}
     public DateTime ClosedDate {get;set;}
     public List<Message> Exchange {get;set;} = [];
+    public Ticket()
+    {
+    }
     public Ticket(int UserId, string Title = "", string Text = "")
     {
         this.Title = Title;
         this.Text = Text;
         this.UserId = UserId;
-        this.CreationDate = DateTime.Now;
+        this.CreationDate = DateTime.UtcNow;
         UserList.Add(UserId);
     }
-    public void AddMessage(int UserId, string Text)
+    public void AddMessage(int UserId, Message Message)
     {
-        Message Message = new Message(UserId, TicketId, Text);
+        this.UserList.Add(UserId);
         this.Exchange.Add(Message);
     }
 

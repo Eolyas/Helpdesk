@@ -6,7 +6,7 @@ namespace HelpDesk.Models;
 public class Message
 {
     public int MessageId {get;set;}
-    public DateTime CreatedAt {get;set;} = DateTime.Now;
+    public DateTime CreatedAt {get;set;} = DateTime.UtcNow;
     [Required]
     public string Text {get;set;} = string.Empty;
     public int TicketId {get;set;}

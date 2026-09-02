@@ -1,21 +1,32 @@
 @page
-@model CreateTicketModel
+@model HelpDesk.Pages.CreateTicketModel
+
+@{
+    ViewData[index: "Title"] = "Create Ticket";
+}
 
 <h1>@ViewData[index: "Title"]</h1>
 
-<h1>New Ticket</h1>
-<form asp-controller="Tickets" asp-action="Submit" method="post">
+<form method="post">
+    <div asp-validation-summary="All"></div>
+
     <div>
-        <label>Title</label>
+        <label asp-for="Title"></label>
         <input asp-for="Title" />
+        <span asp-validation-for="Title"></span>
     </div>
+
     <div>
-        <label>Message</label>
-        <input asp-for="Text" />
+        <label asp-for="Text">Message</label>
+        <textarea asp-for="Text"></textarea>
+        <span asp-validation-for="Text"></span>
     </div>
+
     <div>
-        <label>Your ID</label>
-        <input asp-for="UserId" />
+        <label asp-for="UserId">Your ID</label>
+        <input asp-for="UserId" type="number" />
+        <span asp-validation-for="UserId"></span>
     </div>
+
     <button type="submit">Submit</button>
 </form>

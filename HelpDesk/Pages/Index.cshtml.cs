@@ -19,8 +19,8 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         Tickets = await database.Tickets
-            // .AsNoTracking()
-            // .OrderByDescending(ticket => ticket.CreationDate)
+            .AsNoTracking()
+            .OrderByDescending(ticket => ticket.CreationDate)
             .ToListAsync();
     }
 }

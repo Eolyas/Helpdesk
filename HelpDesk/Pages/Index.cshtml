@@ -1,5 +1,6 @@
 ﻿@page
 @model IndexModel
+@using HelpDesk.Models
 
 <h1>Tickets</h1>
 
@@ -10,11 +11,10 @@
 else
 {
     <ul>
-        @foreach (Models.Ticket ticket in Model.Tickets)
+        @foreach (Ticket ticket in Model.Tickets)
         {
             <li>
-                <a asp-page="/ViewTicket"
-                   asp-route-id="@ticket.TicketId">
+                <a asp-page="/ViewTicket" asp-route-id="@ticket.TicketId">
                     @ticket.Title
                 </a>
 

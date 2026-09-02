@@ -31,7 +31,8 @@ else
         <h3>New message</h3>
 
         <form method="post" asp-page-handler="SendMessage">
-            <input type="hidden" name="ticket_id" value="@Model.Ticket.TicketId" />
+            <input type="hidden" name="TicketId" value="@Model.Ticket.TicketId" />
+            <input type="hidden" name="UserId" value="@Model.Ticket.UserId" />
 
             <label asp-for="Text"></label>
             <input asp-for="Text" class="input-field" />
