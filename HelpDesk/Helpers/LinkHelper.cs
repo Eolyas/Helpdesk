@@ -22,31 +22,14 @@ public static class LinkHelper
 
         foreach (Match match in UrlRegex.Matches(text))
         {
-            // Safely encode the normal text before the URL.
-            string precedingText = text[currentPosition..match.Index];
-            result.Append(WebUtility.HtmlEncode(precedingText));
+            result.Append(text[currentPosition..match.Index]);
 
             string url = match.Value;
-
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri) &&
-                (uri.Scheme == Uri.UriSchemeHttp ||
-                 uri.Scheme == Uri.UriSchemeHttps))
-            {
-                string safeUrl = WebUtility.HtmlEncode(url);
-
-                result.Append(
-                    $"\"{safeUrl}\"{safeUrl}</a>");
-            }
-            else
-            {
-                result.Append(WebUtility.HtmlEncode(url));
-            }
+            result.Append("<a href=\""+WebUtility.HtmlEncode(url)+"\">"+url+"</a>");
 
             currentPosition = match.Index + match.Length;
         }
-
-        // Encode any remaining text.
-        result.Append(WebUtility.HtmlEncode(text[currentPosition..]));
+        result.Append(text[currentPosition..]);
 
         return new HtmlString(result.ToString());
     }

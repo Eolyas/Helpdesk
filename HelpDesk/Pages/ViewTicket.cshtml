@@ -1,57 +1,179 @@
 @page "/ticket/{id:int}"
 @model ViewTicketModel
 @using HelpDesk.Models
+@using Helpers
+
 @{
     ViewData[index: "Title"] = "View Ticket";
 }
 
-<h1>@ViewData[index: "Title"]</h1>
+<div class="ticket-page">
+    @if (Model.Ticket == null)
+    {
+        <section class="ticket-empty">
+            <div class="ticket-empty__icon">!</div>
+            <h1>Ticket not found</h1>
+            <p>The requested ticket does not exist or is no longer available.</p>
+            <a asp-page="/Index" class="button button--secondary">
+                Back to tickets
+            </a>
+        </section>
+    }
+    else
+    {
+        <main class="ticket-container">
+            <header class="ticket-header">
+                <div class="ticket-header__content">
+                    <div class="ticket-reference">
+                        Ticket #@Model.Ticket.TicketId
+                    </div>
 
-@if (Model.Ticket == null)
-{
-    <p>Ticket not found.</p>
+                    <h1 class="ticket-title">
+                        @Model.Ticket.Title
+                    </h1>
+
+                    <div class="ticket-meta">
+                        <span class="ticket-author">
+                            <span class="ticket-avatar">
+                                @Model.Ticket.User.UserId
+                            </span>
+
+                            <span>
+                                <strong>
+                                    @Model.Ticket.User.FirstName
+                                    @Model.Ticket.User.LastName
+                                </strong>
+                                <small>Ticket requester</small>
+                            </span>
+                        </span>
+
+                        <span class="ticket-date">
+                            @Model.Ticket.CreationDate.ToString(format: "dd MMM yyyy, HH:mm")
+                        </span>
+                    </div>
+                </div>
+
+                <span class="status-badge @(Model.Ticket.Open ? "status-badge--open" : "status-badge--closed")">
+                    <span class="status-badge__dot"></span>
+                    @(Model.Ticket.Open ? "Open" : "Closed")
+                </span>
+            </header>
+
+            <div class="ticket-layout">
+                <section class="ticket-main">
+                    <article class="ticket-description">
+                        <h2>Request</h2>
+                        <div class="ticket-description__content">
+                            @Model.Ticket.Text
+                        </div>
+                    </article>
+
+                    <section class="conversation">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Exchange</h2>
+                                <p>
+                                    @(Model.Ticket.Exchange.Count > 1 ? Model.Ticket.Exchange.Count.ToString() + " messages" : Model.Ticket.Exchange.Count.ToString() + " message" )
+                                </p>
+                            </div>
+                        </div>
+
+                        @if (Model.Ticket.Exchange.Any())
+                        {
+                            <div class="message-list">
+                                @foreach (Message message in Model.Ticket.Exchange.OrderBy(m => m.CreationDate))
+                                {
+                                    <article class="message">
+                                        <div class="message-avatar">
+                                            @message.User.UserId
+                                        </div>
+
+                                        <div class="message-body">
+                                            <div class="message-header">
+                                                <strong>
+                                                    @message.User.FirstName
+                                                    @message.User.LastName
+                                                </strong>
+                                                <time>
+                                                    @message.CreationDate.ToString(format: "dd MMM yyyy, HH:mm")
+                                                </time>
+                                            </div>
+
+                                            <div class="message-content">
+                                                @LinkHelper.Linkify(message.Text)
+                                            </div>
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="conversation-empty">
+                                <p>No messages yet.</p>
+                                <span>Send the first reply using the form below.</span>
+                            </div>
+                        }
+                    </section>
+                </section>
+
+                <aside class="reply-panel">
+                    <div class="reply-panel__header">
+                        <h2>New message</h2>
+                        <p>Add a reply to this ticket.</p>
+                    </div>
+
+                    @if (Model.Ticket.Open)
+                    {
+                        <form method="post"
+                              asp-page-handler="SendMessage"
+                              class="reply-form">
+
+                            <input type="hidden"
+                                   name="TicketId"
+                                   value="@Model.Ticket.TicketId" />
+
+                            <input type="hidden"
+                                   name="UserId"
+                                   value="@Model.Ticket.UserId" />
+
+                            <div asp-validation-summary="ModelOnly"
+                                 class="validation-summary">
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Text">Message</label>
+
+                                <textarea asp-for="Text"
+                                          class="message-input"
+                                          rows="9"
+                                          placeholder="Write your reply here..."></textarea>
+
+                                <span asp-validation-for="Text"
+                                      class="validation-error">
+                                </span>
+                            </div>
+
+                            <button type="submit" class="button button--primary">
+                                <span>Send message</span>
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="closed-notice">
+                            <strong>This ticket is closed</strong>
+                            <p>New messages cannot be added to a closed ticket.</p>
+                        </div>
+                    }
+                </aside>
+            </div>
+        </main>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
-else
-{
-    <div class="message-card">
-        <div class="message-header">
-            <h2 class="message-title">
-                @Model.Ticket.Title
-            </h2>
-            <p class="author-id">
-                User ID: @Model.Ticket.UserId
-            </p>
-        </div>
-        <p class="message-content">
-            @Model.Ticket.Text
-        </p>
-        
-        <p>Status: @(Model.Ticket.Open ? "Open" : "Closed")</p>
-
-        <h3>New message</h3>
-
-        <form method="post" asp-page-handler="SendMessage">
-            <input type="hidden" name="TicketId" value="@Model.Ticket.TicketId" />
-            <input type="hidden" name="UserId" value="@Model.Ticket.UserId" />
-
-            <label asp-for="Text"></label>
-            <input asp-for="Text" class="input-field" />
-
-            <span asp-validation-for="Text"></span>
-
-            <button type="submit">Send</button>
-        </form>
-
-        <h3>Exchange</h3>
-
-        <ul>
-            @foreach (Message Message in Model.Ticket.Exchange)
-            {
-                <li>
-                    <strong>User @Message.UserId:</strong>
-                    @Message.Text
-                </li>
-            }
-        </ul>
-    </div>
-}
+`
