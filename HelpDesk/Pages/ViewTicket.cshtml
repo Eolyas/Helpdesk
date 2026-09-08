@@ -1,7 +1,7 @@
 @page "/ticket/{id:int}"
 @model ViewTicketModel
 @using HelpDesk.Models
-@using Helpers
+@using HelpDesk.Helpers
 
 @{
     ViewData[index: "Title"] = "View Ticket";
@@ -43,29 +43,94 @@
                                     @Model.Ticket.User.FirstName
                                     @Model.Ticket.User.LastName
                                 </strong>
-                                <small>Ticket requester</small>
                             </span>
                         </span>
 
                         <span class="ticket-date">
-                            @Model.Ticket.CreationDate.ToString(format: "dd MMM yyyy, HH:mm")
+                            @Model.Ticket.CreationDate.ToString("dd MMM yyyy, HH:mm")
                         </span>
                     </div>
                 </div>
 
-                <span class="status-badge @(Model.Ticket.Open ? "status-badge--open" : "status-badge--closed")">
-                    <span class="status-badge__dot"></span>
-                    @(Model.Ticket.Open ? "Open" : "Closed")
-                </span>
+                <section class="ticket-labels">
+                    <div class="ticket-labels__header">
+                        <h2>Labels</h2>
+                    </div>
+
+                    <div class="ticket-labels__list">
+                        @if (Model.Ticket.Labels.Any())
+                        {
+                            @foreach (Label label in Model.Ticket.Labels.OrderBy(label => label.Name))
+                            {
+                                <span class="ticket-label">
+                                    @label.Name
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="ticket-labels__empty">
+                                No labels assigned
+                            </span>
+                        }
+                    </div>
+
+                    <form method="post"
+                        asp-page-handler="AddLabel"
+                        class="ticket-label-form">
+
+                        <input type="hidden"
+                            name="TicketId"
+                            value="@Model.Ticket.TicketId" />
+
+                        <input asp-for="NewLabelName"
+                            class="ticket-label-form__input"
+                            list="existing-labels"
+                            maxlength="50"
+                            autocomplete="off"
+                            placeholder="Label" />
+
+                        <datalist id="existing-labels">
+                            @foreach (Label label in Model.Labels.Where(label => !Model.Ticket.Labels.Any(assigned => assigned.LabelId == label.LabelId)))
+                            {
+                                <option value="@label.Name"></option>
+                            }
+                        </datalist>
+
+                        <span asp-validation-for="NewLabelName"
+                            class="validation-error">
+                        </span>
+
+                        <button type="submit"
+                                class="ticket-label-form__button">
+                            <span aria-hidden="true">+</span>
+                            Add label
+                        </button>
+                    </form>
+                </section>
+
+                <form method="post"
+                    asp-page-handler="ChangeStatus">
+
+                    <input type="hidden"
+                        name="TicketId"
+                        value="@Model.Ticket.TicketId" />
+
+                    <button type="submit"
+                            class="status-badge @(Model.Ticket.Open
+                                ? "status-badge--open"
+                                : "status-badge--closed")">
+                        <span class="status-badge__dot"></span>
+                        @(Model.Ticket.Open ? "Open" : "Closed")
+                    </button>
+                </form>
             </header>
 
             <div class="ticket-layout">
                 <section class="ticket-main">
                     <article class="ticket-description">
                         <h2>Request</h2>
-                        <div class="ticket-description__content">
-                            @Model.Ticket.Text
-                        </div>
+                        <div class="ticket-description__content">@Model.Ticket.Text</div>
                     </article>
 
                     <section class="conversation">
@@ -99,9 +164,7 @@
                                                 </time>
                                             </div>
 
-                                            <div class="message-content">
-                                                @LinkHelper.Linkify(message.Text)
-                                            </div>
+                                            <div class="message-content">@LinkHelper.Linkify(message.Text)</div>
                                         </div>
                                     </article>
                                 }
@@ -117,11 +180,7 @@
                     </section>
                 </section>
 
-                <aside class="reply-panel">
-                    <div class="reply-panel__header">
-                        <h2>New message</h2>
-                        <p>Add a reply to this ticket.</p>
-                    </div>
+                <aside>
 
                     @if (Model.Ticket.Open)
                     {
@@ -176,4 +235,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-`

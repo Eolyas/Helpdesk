@@ -17,7 +17,7 @@ public class Message
     public Message(int UserId, int TicketId, string Text)
     {
         this.UserId = UserId;
-        this.Text = Text;
+        this.Text = Text.Trim();
         this.TicketId = TicketId;
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using HelpDesk.Models;
 using HelpDesk.Data;
 using Microsoft.EntityFrameworkCore;
+using HelpDesk.Migrations;
+using System.ComponentModel.DataAnnotations;
 
 namespace HelpDesk.Pages;
 
@@ -16,6 +18,10 @@ public class ViewTicketModel : PageModel
         this.database = database;
     }
     public Ticket? Ticket { get; set; }
+    [BindProperty]
+    [StringLength(50)]
+    public string NewLabelName {get;set;} = string.Empty;
+    public List<Label> Labels {get;set;} = [];
 
     // Get the text from ViewTicket.cshtml written by the user.
     [BindProperty]
@@ -25,10 +31,16 @@ public class ViewTicketModel : PageModel
     public async Task<IActionResult> OnGetAsync(int Id)
     {
         Ticket = await database.Tickets
+            .Include(Ticket => Ticket.Labels)
             .Include(Ticket => Ticket.User)
             .Include(Ticket => Ticket.Exchange)
                 .ThenInclude(message => message.User)
             .SingleOrDefaultAsync(Ticket => Ticket.TicketId == Id);
+
+        Labels = await database.Labels
+            .AsNoTracking()
+            .OrderBy(label => label.Name)
+            .ToListAsync();
         if (Ticket == null)
         {
             return NotFound();
@@ -63,5 +75,51 @@ public class ViewTicketModel : PageModel
         Ticket.AddMessage(UserId,Message);
 
         return LocalRedirect($"/ticket/{TicketId}");
+    }
+
+    public async Task<IActionResult> OnPostChangeStatusAsync(int TicketId)
+    {
+        Ticket? Ticket = await database.Tickets.SingleOrDefaultAsync(ticket => ticket.TicketId == TicketId);
+        if (Ticket == null)
+        {
+            return NotFound();
+        }
+        Ticket.Open = !Ticket.Open;
+        await database.SaveChangesAsync();
+        return RedirectToPage("/ViewTicket", new { id = Ticket.TicketId });
+    }
+
+    public async Task<IActionResult> OnPostAddLabelAsync(int TicketId, string NewLabelName)
+    {
+        Ticket? ticket = await database.Tickets
+            .Include(ticket => ticket.Labels)
+            .SingleOrDefaultAsync(ticket => ticket.TicketId == TicketId);
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+        Label? label = null;
+        if (!string.IsNullOrWhiteSpace(NewLabelName))
+        {
+            label = await database.Labels
+                .FirstOrDefaultAsync(existingLabel => existingLabel.Name == NewLabelName);
+
+            if (label == null)
+            {
+                label = new Label{Name = NewLabelName};
+                database.Labels.Add(label);
+                ticket.Labels.Add(label);
+                await database.SaveChangesAsync();
+            } else
+            {
+                bool alreadyAdded = ticket.Labels.Any(existingLabel => existingLabel.LabelId == label.LabelId || existingLabel.Name == label.Name);
+                if (!alreadyAdded)
+                {
+                    ticket.Labels.Add(label);
+                    await database.SaveChangesAsync();
+                }
+            }
+        }
+        return RedirectToPage("/ViewTicket", new { id = TicketId });
     }
 }

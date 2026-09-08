@@ -19,6 +19,7 @@ public class Ticket
     public DateTime CreationDate {get;set;}
     public DateTime ClosedDate {get;set;}
     public List<Message> Exchange {get;set;} = [];
+    public List<Label> Labels {get;set;} = [];
     public Ticket(int UserId, string Title = "", string Text = "")
     {
         this.Title = Title;

@@ -12,10 +12,9 @@ public class HelpDeskDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
-
     public DbSet<Ticket> Tickets => Set<Ticket>();
-
     public DbSet<Message> TicketMessages => Set<Message>();
+    public DbSet<Label> Labels => Set<Label>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,5 +48,14 @@ public class HelpDeskDbContext : DbContext
 
         modelBuilder.Entity<Message>()
             .HasIndex(message => message.TicketId);
+
+        modelBuilder.Entity<Label>()
+            .HasIndex(label => label.Name)
+            .IsUnique();
+        
+        modelBuilder.Entity<Ticket>()
+            .HasMany(ticket => ticket.Labels)
+            .WithMany(label => label.Tickets)
+            .UsingEntity(join => join.ToTable("TicketLabels"));
     }
 }

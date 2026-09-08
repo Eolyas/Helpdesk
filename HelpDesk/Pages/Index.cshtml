@@ -1,29 +1,4 @@
-﻿@* @page
-@model IndexModel
-@using HelpDesk.Models
-
-<h1>Tickets</h1>
-
-@if (Model.Tickets.Count == 0)
-{
-    <p>No tickets found.</p>
-}
-else
-{
-    <ul>
-        @foreach (Ticket ticket in Model.Tickets)
-        {
-            <li>
-                <a asp-page="/ViewTicket" asp-route-id="@ticket.TicketId">
-                    @ticket.Title
-                </a>
-
-                <p>@ticket.Text</p>
-            </li>
-        }
-    </ul>
-} *@
-@page
+﻿@page
 @model IndexModel
 @using HelpDesk.Models
 @using System.Linq
@@ -36,11 +11,11 @@ else
         .OrderByDescending(ticket => ticket.CreationDate);
 }
 
-<div class="tickets-page">
-    <main class="tickets-container">
-        <header class="tickets-header">
-            <div class="tickets-header__content">
-                <span class="tickets-header__label">Help desk</span>
+<div class="ticket-page">
+    <main class="ticket-container">
+        <header class="ticket-header">
+            <div class="ticket-header__content">
+                <span>Help desk</span>
 
                 <h1>Open Tickets</h1>
 
@@ -49,21 +24,15 @@ else
                 </p>
             </div>
 
-            <div class="tickets-counter">
+            <div>
                 <strong>@openTickets.Count()</strong>
                 <span>Open ticket@(openTickets.Count() == 1 ? "" : "s")</span>
             </div>
         </header>
 
-        <section class="tickets-content">
-            <div class="tickets-toolbar">
-                <div>
-                    <h2>Current requests</h2>
-                    <p>Tickets are ordered from newest to oldest.</p>
-                </div>
-
-                @* Update the page path if your ticket creation page has another name. *@
-                <a asp-page="/CreateTicket" class="button button--primary tickets-create">
+        <section>
+            <div>
+                <a asp-page="/CreateTicket" class="button button--primary">
                     <span aria-hidden="true">+</span>
                     New ticket
                 </a>
@@ -71,8 +40,8 @@ else
 
             @if (!openTickets.Any())
             {
-                <div class="tickets-empty">
-                    <div class="tickets-empty__icon" aria-hidden="true">✓</div>
+                <div class="ticket-empty">
+                    <div class="ticket-empty__icon" aria-hidden="true">✓</div>
 
                     <h2>No open tickets</h2>
 
@@ -87,68 +56,45 @@ else
                     @foreach (Ticket ticket in openTickets)
                     {
                         <article class="ticket-card">
-                            <div class="ticket-card__header">
-                                <span class="ticket-card__reference">
-                                    Ticket #@ticket.TicketId
+                            <div class="ticket-card__top">
+                                <span>
+                                    @ticket.TicketId
                                 </span>
 
                                 <span class="status-badge status-badge--open">
                                     <span class="status-badge__dot"></span>
                                     Open
                                 </span>
+
+                                <time class="ticket-date"
+                                    datetime="@ticket.CreationDate.ToString(format: "O")">
+                                    @ticket.CreationDate.ToString(format: "dd MMM yyyy, HH:mm")
+                                </time>
                             </div>
 
-                            <div class="ticket-card__body">
-                                <h2 class="ticket-card__title">
+                            <div>
+                                <h2 class="ticket-card__heading">
                                     <a asp-page="/ViewTicket"
                                        asp-route-id="@ticket.TicketId">
                                         @ticket.Title
                                     </a>
                                 </h2>
-
                                 <p class="ticket-card__description">
                                     @ticket.Text
                                 </p>
                             </div>
 
                             <footer class="ticket-card__footer">
-                                <div class="ticket-card__user">
-                                    <span class="ticket-card__avatar">
-                                        @if (ticket.User != null)
-                                        {
-                                            @(ticket.User.FirstName?.FirstOrDefault())@(ticket.User.LastName?.FirstOrDefault())
-                                        }
-                                        else
-                                        {
-                                            @:?
-                                        }
-                                    </span>
-
-                                    <span class="ticket-card__user-info">
-                                        @if (ticket.User != null)
-                                        {
-                                            <strong>
-                                                @ticket.User.FirstName @ticket.User.LastName
-                                            </strong>
-                                        }
-                                        else
-                                        {
-                                            <strong>Unknown user</strong>
-                                        }
-
-                                        <time datetime="@ticket.CreationDate.ToString(format: "O")">
-                                            @ticket.CreationDate.ToString(format: "dd MMM yyyy, HH:mm")
-                                        </time>
-                                    </span>
-                                </div>
-
-                                <a asp-page="/ViewTicket"
-                                   asp-route-id="@ticket.TicketId"
-                                   class="ticket-card__link"
-                                   aria-label="View ticket @ticket.Title">
-                                    View ticket
-                                    <span aria-hidden="true">→</span>
-                                </a>
+                                @if (ticket.User != null)
+                                {
+                                    <strong>
+                                        @ticket.User.FirstName @ticket.User.LastName
+                                    </strong>
+                                }
+                                else
+                                {
+                                    <strong>Unknown user</strong>
+                                }
                             </footer>
                         </article>
                     }

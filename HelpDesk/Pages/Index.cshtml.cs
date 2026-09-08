@@ -20,6 +20,7 @@ public class IndexModel : PageModel
     {
         Tickets = await database.Tickets
             .AsNoTracking()
+            .Include(ticket =>ticket.User)
             .OrderByDescending(ticket => ticket.CreationDate)
             .ToListAsync();
     }
