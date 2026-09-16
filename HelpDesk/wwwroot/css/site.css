@@ -228,7 +228,6 @@ body {
     overflow-wrap: anywhere;
     white-space: pre-line;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
 }
 
 .ticket-card__footer {

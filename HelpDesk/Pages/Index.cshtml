@@ -26,16 +26,23 @@
 
             <div>
                 <strong>@openTickets.Count()</strong>
-                <span>Open ticket@(openTickets.Count() == 1 ? "" : "s")</span>
+                <span>Open ticket@(openTickets.Count() == 1 ? "" : "s") out of @(Model.Tickets.Count()) tickets</span>
             </div>
         </header>
 
         <section>
+            <a asp-page="/CreateTicket" class="button button--primary">
+                + New ticket
+            </a>
+
             <div>
-                <a asp-page="/CreateTicket" class="button button--primary">
-                    <span aria-hidden="true">+</span>
-                    New ticket
-                </a>
+                <form method="post"
+                    asp-page-handler="Search">
+                    <input asp-for="SearchInput"/>
+                    <button type="submit">
+                        search
+                    </button>
+                </form>
             </div>
 
             @if (!openTickets.Any())
